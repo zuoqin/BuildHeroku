@@ -5,19 +5,6 @@
 # fail fast
 set -e
 
-
-function conditional_download() {
-  DOWNLOAD_URL="$1"
-  DESTINATION="$2"
-
-  if [ ! -d ${DESTINATION} ]; then
-    rm -rf ${DESTINATION}
-    mkdir -p ${DESTINATION}
-    echo "-----> Downloading ${DOWNLOAD_URL}"
-    curl ${DOWNLOAD_URL} -s | tar xj -C ${DESTINATION}
-  fi
-}
-
 MONO3_VM_BINARY="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
 NUGET_BINARY="http://s3.amazonaws.com/mono3-buildpack/nuget.tar.bz2"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
@@ -48,7 +35,7 @@ echo "---- /"
 ls /
 
 echo "-----> Linking $1 --> /app"
-ln -s "$1" /app
+ln -s "$1/mono3" /app/vendor
 
 echo "---- /app"
 ls /app

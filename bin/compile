@@ -16,7 +16,7 @@ curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
 wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKET_BINARY
 
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
-echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku
+echo "#!/bin/sh\n/app/vendor/mono3/bin/mono /app/vendor/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku
 chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
 chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku
 

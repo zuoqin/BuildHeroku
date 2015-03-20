@@ -16,6 +16,7 @@ curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
 
 
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
+echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku
 chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
 
 echo "-----> Setting envvars"
@@ -33,7 +34,6 @@ if [ -f $1/*/packages.config ]; then
   find $1/ -name packages.config | xargs mono $NUGET install -o packages
 fi
 
-echo "-----> Compiling application"
-mono $XBUILD /property:FscToolExe="$1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku"
+
 
 

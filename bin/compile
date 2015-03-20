@@ -27,13 +27,13 @@ echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd $1
 
-if [ -f paket.lock ]; then
+if [ -f paket.dependencies ]; then
   echo "-----> Installing packages"
   mono $MONO3_VM_VENDOR/mono3/bin/paket.exe install
 fi
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
-  mono $MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku app.fsx
+  fsharpc-heroku app.fsx
 fi
 

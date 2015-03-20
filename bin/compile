@@ -42,6 +42,7 @@ wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKET_BINARY
 
 mkdir -p "/app"
 
+echo "-----> Linking $1/$MONO3_VM_VENDOR --> /app/vendor"
 ln -s "$1/$MONO3_VM_VENDOR" /app/vendor
 
 #echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc

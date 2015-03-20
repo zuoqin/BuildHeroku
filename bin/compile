@@ -28,12 +28,21 @@ mono $MOZROOT --sync --import
 cd $1
 
 if [ -f paket.dependencies ]; then
-  echo "-----> Installing packages"
+  echo "-----> paket.dependencies found, installing packages with paket"
   mono $MONO3_VM_VENDOR/mono3/bin/paket.exe install
 fi
+
+if [ -f packages.config -o -f */packages.config ]; then 
+   echo "-----> packages.config found, installing dependencies with nuget" 
+   find  -name packages.config | xargs mono $NUGET install -o packages 
+fi 
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
   fsharpc-heroku app.fsx
 fi
 
+if [ -f *.sln -a ! -f dummy.sln]; then
+   echo "-----> Compiling application" 
+   mono $XBUILD /property:FscToolExe="$1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku" 
+fi

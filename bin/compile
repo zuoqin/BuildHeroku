@@ -18,8 +18,6 @@ function conditional_download() {
   fi
 }
 
-mkdir -p ${CACHE_DIR}
-
 MONO3_VM_BINARY="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
 NUGET_BINARY="http://s3.amazonaws.com/mono3-buildpack/nuget.tar.bz2"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"

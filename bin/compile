@@ -2,6 +2,7 @@
 
 MONO3_VM_BINARY="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
 NUGET_BINARY="http://s3.amazonaws.com/mono3-buildpack/nuget.tar.bz2"
+PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
 MONO3_VM_VENDOR="vendor/"
 
 NUGET="$1/$MONO3_VM_VENDOR/mono3/bin/NuGet.exe"
@@ -12,8 +13,7 @@ echo "-----> Copying mono to $1/$MONO3_VM_VENDOR"
 mkdir -p "$1/$MONO3_VM_VENDOR"
 curl $MONO3_VM_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR" -f -
 curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
-
-
+wget -o "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKETBINARY
 
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku
@@ -26,4 +26,14 @@ export LD_LIBRARY_PATH="$1/$MONO3_VM_VENDOR/mono3/lib"
 echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd $1
+
+if [ -f paket.lock ]; then
+  echo "-----> Installing packages"
+  mono $MONO3_VM_VENDOR/mono3/bin/paket.exe install
+fi
+
+if [ -f app.fsx ]; then
+  echo "-----> Compiling app.fsx"
+  mono $MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku app.fsx
+fi
 

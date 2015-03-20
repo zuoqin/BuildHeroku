@@ -57,6 +57,15 @@ echo "-----> Importing trusted root certificates"
 mozroots --sync --import
 cd $1
 
+cho "-----> mozroots"
+cat `which mozroots`
+
+cho "-----> fsharpc"
+cat `which fsharpc`
+
+cho "-----> fsharpc --version"
+fsharpc --version
+
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
   mono $PAKET_EXECUTABLE_PATH install

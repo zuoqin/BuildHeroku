@@ -30,9 +30,12 @@ XBUILD="$1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/xbuild.exe"
 rm -fr $2/$MONO3_VM_VENDOR
 
 echo "-----> Downloading mono to $2/$MONO3_VM_VENDOR"
-conditional_download $MONO3_VM_BINARY $2/$MONO3_VM_VENDOR
+if [ ! -d $2/$MONO3_VM_VENDOR ]; then
+    mkdir -p $2/$MONO3_VM_VENDOR
+    curl $MONO3_VM_BINARY -s | tar xj -C $2/$MONO3_VM_VENDOR
+fi
 
-echo "-----> Copying mono to $1/$MONO3_VM_VENDOR"
+echo "-----> Copying mono to $1"
 cp -pr "$2/$MONO3_VM_VENDOR" "$1"
 
 echo "-----> Downloading nuget to $1/$MONO3_VM_VENDOR/mono3/bin/"
@@ -41,7 +44,8 @@ curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
 echo "-----> Downloading paket to $1/$MONO3_VM_VENDOR/mono3/bin/"
 wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKET_BINARY
 
-mkdir -p "/app"
+echo "---- /"
+ls /
 
 echo "-----> Linking $1 --> /app"
 ln -s "$1" /app

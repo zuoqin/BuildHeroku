@@ -9,31 +9,30 @@ MONO3_VM_BINARY="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.ta
 NUGET_BINARY="http://s3.amazonaws.com/mono3-buildpack/nuget.tar.bz2"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
 
-NUGET="$1/vendor/mono3/bin/NuGet.exe"
+NUGET="http://nuget.org/nuget.exe"
 MOZROOT="$1/vendor/mono3/lib/mono/4.5/mozroots.exe"
 XBUILD="$1/vendor/mono3/lib/mono/4.5/xbuild.exe"
 
 rm -fr $2/vendor
 
 echo "-----> Downloading mono to $2/vendor"
-if [ ! -d $2/vendor ]; then
+if [ ! -d $2/vendor/mono3 ]; then
     mkdir -p $2/vendor
     curl $MONO3_VM_BINARY -s | tar xj -C $2/vendor
 fi
 
-echo "-----> Copying mono to $1"
-cp -pr "$2/vendor" "$1"
+echo "-----> Copying $2/vendor/mono3 to $1/vendor"
+cp -pr "$2/vendor/mono3" "$1/vendor"
 
 echo "-----> Downloading nuget to $1/vendor/mono3/bin/"
-curl $NUGET_BINARY -o - | tar xj -C "$1/vendor/mono3/bin/" -f -
+curl $NUGET_BINARY -o "$1/vendor/mono3/bin/nuget.exe" 
 
 echo "-----> Downloading paket to $1/vendor/mono3/bin/"
-wget -O "$1/vendor/mono3/bin/paket.exe" $PAKET_BINARY
+curl $PAKET_BINARY -o "$1/vendor/mono3/bin/paket.exe" 
 
-echo "---- /"
-ls /
+rm -fr /app/vendor/mono3
 
-echo "-----> Linking $1 --> /app"
+echo "-----> Linking $1/vendor/mono3 --> /app"
 ln -s "$1/vendor/mono3" /app/vendor
 
 echo "---- /app"

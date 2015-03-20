@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
 
+
 # fail fast
 set -e
 
-#DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
-MONO_VERSION="3.10.0"
-#MONO_DOWNLOAD="${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz"
-MONO_DOWNLOAD="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
-PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
-NUGET_BINARY="http://nuget.org/nuget.exe"
-
-BUILD_DIR=$1
-CACHE_DIR=$2
 
 function conditional_download() {
   DOWNLOAD_URL="$1"
@@ -26,56 +18,51 @@ function conditional_download() {
   fi
 }
 
-LP_DIR=`cd $(dirname $0); cd ..; pwd`
-cd ${BUILD_DIR}
 mkdir -p ${CACHE_DIR}
 
-MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
-conditional_download ${MONO_DOWNLOAD} ${MONO_CACHE_LOCATION}
+MONO3_VM_BINARY="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
+NUGET_BINARY="http://s3.amazonaws.com/mono3-buildpack/nuget.tar.bz2"
+PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
+MONO3_VM_VENDOR="vendor/"
 
+NUGET="$1/$MONO3_VM_VENDOR/mono3/bin/NuGet.exe"
+MOZROOT="$1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/mozroots.exe"
+XBUILD="$1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/xbuild.exe"
 
-# Copy mono from cache to where we're building the slug
-cp -r "${MONO_CACHE_LOCATION}/mono3" .
-# Mono expects to be running out of /app
-ln -s "$BUILD_DIR/mono3" /app/mono
+echo "-----> Downloadin mono to $2/$MONO3_VM_VENDOR"
+mkdir -p "$2/$MONO3_VM_VENDOR"
+conditional_download $MONO3_VM_BINARY "$2/$MONO3_VM_VENDOR"
 
+echo "-----> Copying mono to $1/$MONO3_VM_VENDOR"
+mkdir -p "$1/$MONO3_VM_VENDOR"
+cp -pr "$2/$MONO3_VM_VENDOR/mono3" "$1/$MONO3_VM_VENDOR"
 
-NUGET_EXECUTABLE_PATH=${CACHE_DIR}/nuget.exe
-PAKET_EXECUTABLE_PATH=${CACHE_DIR}/paket.exe
+echo "-----> Downloading nuget to $1/$MONO3_VM_VENDOR/mono3/bin/"
+curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
 
-if [ ! -f ${PAKET_EXECUTABLE_PATH} ]; then
-  curl -LSso PAKET_EXECTABLE_PATH $PAKET_BINARY
-fi
+echo "-----> Downloading paket to $1/$MONO3_VM_VENDOR/mono3/bin/"
+wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKET_BINARY
 
-if [ ! -f ${NUGET_EXECUTABLE_PATH} ]; then
-  curl -LSso ${NUGET_EXECUTABLE_PATH} $NUGET_BINARY
-fi
+echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
+echo "#!/bin/sh\n/app/vendor/mono3/bin/mono /app/vendor/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
+chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
+chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
 
-
-export PATH="/app/mono/bin:${PATH}"
-export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
-
+echo "-----> Setting envvars"
+export PATH="$1/$MONO3_VM_VENDOR/mono3/bin:$PATH"
+export LD_LIBRARY_PATH="$1/$MONO3_VM_VENDOR/mono3/lib"
 echo "-----> Importing trusted root certificates"
-mozroots --sync --import
+mono $MOZROOT --sync --import
 cd $1
-
-echo "-----> mozroots"
-which mozroots
-
-echo "-----> fsharpc"
-which fsharpc
-
-echo "-----> fsharpc --version"
-fsharpc --version
 
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
-  mono $PAKET_EXECUTABLE_PATH install
+  mono $MONO3_VM_VENDOR/mono3/bin/paket.exe install
 fi
 
 if [ -f packages.config -o -f */packages.config ]; then 
    echo "-----> packages.config found, installing dependencies with nuget" 
-   find  -name packages.config | xargs mono $NUGET_EXECUTABLE_PATH restore -NonInteractive 
+   find  -name packages.config | xargs mono $NUGET install -o packages 
 fi 
 
 if [ -f app.fsx ]; then
@@ -85,5 +72,8 @@ fi
 
 if [ -f *.sln -a ! -f dummy.sln]; then
    echo "-----> Compiling application" 
-   xbuild 
+   mono $XBUILD /property:FscToolExe="$1/$MONO3_VM_VENDOR/mono3/bin/fsharpc" 
 fi
+
+
+

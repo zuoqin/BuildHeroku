@@ -14,7 +14,7 @@ function conditional_download() {
     rm -rf ${DESTINATION}
     mkdir -p ${DESTINATION}
     echo "-----> Downloading ${DOWNLOAD_URL}"
-    curl ${DOWNLOAD_URL} -s | tar xvj -C ${DESTINATION}
+    curl ${DOWNLOAD_URL} -s | tar xj -C ${DESTINATION}
   fi
 }
 
@@ -40,10 +40,12 @@ curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
 echo "-----> Downloading paket to $1/$MONO3_VM_VENDOR/mono3/bin/"
 wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKET_BINARY
 
-echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
-echo "#!/bin/sh\n/app/vendor/mono3/bin/mono /app/vendor/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
-chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
-chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
+ln -s "$BUILD_DIR/mono3" /app
+
+#echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
+#echo "#!/bin/sh\n/app/vendor/mono3/bin/mono /app/vendor/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
+#chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
+#chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
 
 echo "-----> Setting envvars"
 export PATH="$1/$MONO3_VM_VENDOR/mono3/bin:$PATH"
@@ -69,7 +71,7 @@ fi
 
 if [ -f *.sln -a ! -f dummy.sln]; then
    echo "-----> Compiling application" 
-   mono $XBUILD /property:FscToolExe="$1/$MONO3_VM_VENDOR/mono3/bin/fsharpc" 
+   mono $XBUILD 
 fi
 
 

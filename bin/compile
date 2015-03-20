@@ -69,9 +69,7 @@ fi
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
   fsharpc app.fsx
-fi
-
-if [  ( -f "*.sln" ) -a ( ! -f dummy.sln )]; then
+elif [ -f *.sln ]; then
    echo "-----> Compiling application" 
    mono $XBUILD 
 fi

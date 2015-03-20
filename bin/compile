@@ -21,8 +21,10 @@ if [ ! -d $2/vendor/mono3 ]; then
     curl $MONO3_VM_BINARY -s | tar xj -C $2/vendor
 fi
 
+mkdir -p $1/vendor
+
 echo "-----> Copying $2/vendor/mono3 to $1/vendor"
-cp -pr "$2/vendor/mono3" "$1/vendor"
+cp -pr "$2/vendor/mono3" "$1/vendor/"
 
 echo "-----> Downloading nuget to $1/vendor/mono3/bin/"
 curl $NUGET_BINARY -o "$1/vendor/mono3/bin/nuget.exe" 

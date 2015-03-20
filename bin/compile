@@ -13,24 +13,18 @@ NUGET="http://nuget.org/nuget.exe"
 MOZROOT="$1/vendor/mono3/lib/mono/4.5/mozroots.exe"
 XBUILD="$1/vendor/mono3/lib/mono/4.5/xbuild.exe"
 
-mkdir -p $2
-
 echo "-----> Downloading mono to $2/$STACK/vendor"
-if [ ! -d $2/vendor/mono3 ]; then
-    mkdir -p $2/vendor
+if [ ! -d $2/$STACK/vendor/mono3 ]; then
+    mkdir -p $2/$STACK/vendor
     curl $MONO3_VM_BINARY -s | tar xj -C $2/$STACK/vendor
+    curl $NUGET_BINARY -L -o "$2/$STACK/vendor/mono3/bin/nuget.exe" 
+    curl $PAKET_BINARY -L -o "$2/$STACK/vendor/mono3/bin/paket.exe" 
 fi
 
 mkdir -p $1/vendor
 
 echo "-----> Copying $2/$STACK/vendor/mono3 to $1/vendor"
 cp -pr "$2/$STACK/vendor/mono3" "$1/vendor/"
-
-echo "-----> Downloading nuget to $1/vendor/mono3/bin/"
-curl $NUGET_BINARY -L -o "$1/vendor/mono3/bin/nuget.exe" 
-
-echo "-----> Downloading paket to $1/vendor/mono3/bin/"
-curl $PAKET_BINARY -L -o "$1/vendor/mono3/bin/paket.exe" 
 
 rm -fr /app/vendor/mono3
 

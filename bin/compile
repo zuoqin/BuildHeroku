@@ -27,10 +27,10 @@ echo "-----> Copying $2/vendor/mono3 to $1/vendor"
 cp -pr "$2/vendor/mono3" "$1/vendor/"
 
 echo "-----> Downloading nuget to $1/vendor/mono3/bin/"
-curl $NUGET_BINARY -o "$1/vendor/mono3/bin/nuget.exe" 
+curl $NUGET_BINARY -L -o "$1/vendor/mono3/bin/nuget.exe" 
 
 echo "-----> Downloading paket to $1/vendor/mono3/bin/"
-curl $PAKET_BINARY -o "$1/vendor/mono3/bin/paket.exe" 
+curl $PAKET_BINARY -L -o "$1/vendor/mono3/bin/paket.exe" 
 
 rm -fr /app/vendor/mono3
 

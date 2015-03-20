@@ -37,7 +37,7 @@ conditional_download ${MONO_DOWNLOAD} ${MONO_CACHE_LOCATION}
 # Copy mono from cache to where we're building the slug
 cp -r "${MONO_CACHE_LOCATION}/mono3" .
 # Mono expects to be running out of /app
-ln -s "$BUILD_DIR/mono3" /app
+ln -s "$BUILD_DIR/mono3" /app/mono
 
 
 NUGET_EXECUTABLE_PATH=${CACHE_DIR}/nuget.exe
@@ -60,9 +60,10 @@ mozroots --sync --import
 cd $1
 
 echo "-----> mozroots"
-cat `which mozroots`
+which mozroots
 
 echo "-----> fsharpc"
+which fsharpc
 
 echo "-----> fsharpc --version"
 fsharpc --version

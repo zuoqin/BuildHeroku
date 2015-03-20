@@ -45,6 +45,19 @@ mkdir -p "/app"
 echo "-----> Linking $1/$MONO3_VM_VENDOR --> /app/vendor"
 ln -s "$1/$MONO3_VM_VENDOR" /app/vendor
 
+echo "---- /app"
+ls /app
+echo "---- /app/vendor"
+ls /app/vendor
+echo "---- /app/vendor/mono3"
+ls /app/vendor/mono3
+echo "---- /app/vendor/mono3/lib"
+ls /app/vendor/mono3/lib
+echo "---- /app/vendor/mono3/lib/mono"
+ls /app/vendor/mono3/lib/mono
+echo "---- /app/vendor/mono3/lib/mono/4.0"
+ls /app/vendor/mono3/lib/mono/4.0
+
 #echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc
 #echo "#!/bin/sh\n/app/vendor/mono3/bin/mono /app/vendor/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi
 #chmod +x $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc

@@ -57,13 +57,13 @@ echo "-----> Importing trusted root certificates"
 mozroots --sync --import
 cd $1
 
-cho "-----> mozroots"
+echo "-----> mozroots"
 cat `which mozroots`
 
-cho "-----> fsharpc"
+echo "-----> fsharpc"
 cat `which fsharpc`
 
-cho "-----> fsharpc --version"
+echo "-----> fsharpc --version"
 fsharpc --version
 
 if [ -f paket.dependencies ]; then

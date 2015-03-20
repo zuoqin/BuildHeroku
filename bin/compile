@@ -5,7 +5,7 @@
 set -e
 
 #DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
-#MONO_VERSION="3.10.0"
+MONO_VERSION="3.10.0"
 #MONO_DOWNLOAD="${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz"
 MONO_DOWNLOAD="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
@@ -35,9 +35,9 @@ conditional_download ${MONO_DOWNLOAD} ${MONO_CACHE_LOCATION}
 
 
 # Copy mono from cache to where we're building the slug
-cp -r "${MONO_CACHE_LOCATION}/mono" .
+cp -r "${MONO_CACHE_LOCATION}/mono3" .
 # Mono expects to be running out of /app
-ln -s "$BUILD_DIR/mono" /app
+ln -s "$BUILD_DIR/mono3" /app
 
 
 NUGET_EXECUTABLE_PATH=${CACHE_DIR}/nuget.exe

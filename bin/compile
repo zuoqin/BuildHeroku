@@ -34,7 +34,7 @@ echo "-----> Making $2/$MONO3_VM_VENDOR"
 mkdir -p "$2/$MONO3_VM_VENDOR"
 
 if [ -d "$2/$MONO3_VM_VENDOR" ]; then
-   ls "$2/$MONO3_VM_VENDOR""
+   ls "$2/$MONO3_VM_VENDOR"
 fi
 
 echo "-----> Downloading mono to $2/$MONO3_VM_VENDOR"

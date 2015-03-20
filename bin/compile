@@ -4,8 +4,10 @@
 # fail fast
 set -e
 
-DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
-MONO_VERSION="3.10.0"
+#DEPENDENCY_S3_BUCKET_PATH="http://s3.amazonaws.com/mono-dependencies"
+#MONO_VERSION="3.10.0"
+#MONO_DOWNLOAD="${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz"
+MONO_DOWNLOAD="http://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe"
 NUGET_BINARY="http://nuget.org/nuget.exe"
 
@@ -20,7 +22,7 @@ function conditional_download() {
     rm -rf ${DESTINATION}
     mkdir -p ${DESTINATION}
     echo "-----> Downloading ${DOWNLOAD_URL}"
-    curl ${DOWNLOAD_URL} -s | tar xz -C ${DESTINATION}
+    curl ${DOWNLOAD_URL} -s | tar xj -C ${DESTINATION}
   fi
 }
 
@@ -29,7 +31,7 @@ cd ${BUILD_DIR}
 mkdir -p ${CACHE_DIR}
 
 MONO_CACHE_LOCATION=${CACHE_DIR}/$STACK/mono-${MONO_VERSION}
-conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
+conditional_download ${MONO_DOWNLOAD} ${MONO_CACHE_LOCATION}
 
 
 # Copy mono from cache to where we're building the slug
@@ -61,7 +63,6 @@ echo "-----> mozroots"
 cat `which mozroots`
 
 echo "-----> fsharpc"
-cat `which fsharpc`
 
 echo "-----> fsharpc --version"
 fsharpc --version

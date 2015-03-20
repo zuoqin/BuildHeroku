@@ -13,7 +13,7 @@ echo "-----> Copying mono to $1/$MONO3_VM_VENDOR"
 mkdir -p "$1/$MONO3_VM_VENDOR"
 curl $MONO3_VM_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR" -f -
 curl $NUGET_BINARY -o - | tar xj -C "$1/$MONO3_VM_VENDOR/mono3/bin/" -f -
-wget -o "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKETBINARY
+wget -O "$1/$MONO3_VM_VENDOR/mono3/bin/paket.exe" $PAKETBINARY
 
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsc.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpc-heroku
 echo "#!/bin/sh\n$1/$MONO3_VM_VENDOR/mono3/bin/mono $1/$MONO3_VM_VENDOR/mono3/lib/mono/4.5/fsi.exe \"\$@\"" > $1/$MONO3_VM_VENDOR/mono3/bin/fsharpi-heroku

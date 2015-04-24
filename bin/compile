@@ -31,21 +31,21 @@ cp -pr "${CACHE_DIR}/$STACK/vendor/mono" "${BUILD_DIR}/vendor/"
 rm -fr /app/vendor/mono
 
 echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
-ln -s "${BUILD_DIR}/vendor/mono" /app/vendor
+ln -s "${BUILD_DIR}/vendor/mono" /app
 
 echo "-----> Setting envvars"
-export PATH="/app/vendor/mono/bin:$PATH"
-export LD_LIBRARY_PATH="/app/vendor/mono/lib"
+export PATH="/app/mono/bin:$PATH"
+export LD_LIBRARY_PATH="/app/mono/lib"
 echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd ${BUILD_DIR}
 
-cp -p vendor/mono/bin/fsharpc vendor/mono/bin/fsharpc-heroku
-cp -p vendor/mono/bin/fsharpi vendor/mono/bin/fsharpi-heroku
+#cp -p vendor/mono/bin/fsharpc vendor/mono/bin/fsharpc-heroku
+#cp -p vendor/mono/bin/fsharpi vendor/mono/bin/fsharpi-heroku
 
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
-  mono vendor/mono/bin/paket.exe install
+  mono mono/bin/paket.exe install
 fi
 
 if [ -f packages.config -o -f */packages.config ]; then 
@@ -55,7 +55,7 @@ fi
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
-  mono vendor/mono/lib/mono/4.5/fsc.exe app.fsx
+  mono mono/lib/mono/4.5/fsc.exe app.fsx
 elif [ -f *.sln ]; then
    echo "-----> Compiling application" 
    mono $XBUILD 

@@ -18,7 +18,7 @@ XBUILD="${BUILD_DIR}/vendor/mono3/lib/mono/4.5/xbuild.exe"
 echo "-----> Downloading mono to ${CACHE_DIR}/$STACK/vendor"
 if [ ! -d ${CACHE_DIR}/$STACK/vendor/mono3 ]; then
     mkdir -p ${CACHE_DIR}/$STACK/vendor
-    curl $MONO3_VM_BINARY -s | tar xj -C ${CACHE_DIR}/$STACK/vendor
+    curl $MONO3_VM_BINARY -s | tar xz -C ${CACHE_DIR}/$STACK/vendor
     curl $NUGET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono3/bin/nuget.exe" 
     curl $PAKET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono3/bin/paket.exe" 
 fi

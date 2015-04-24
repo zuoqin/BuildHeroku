@@ -33,9 +33,6 @@ rm -fr /app/vendor/mono
 echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
 ln -s "${BUILD_DIR}/vendor/mono" /app/vendor
 
-cp -p /app/vendor/mono/bin/fsharpc /app/vendor/mono/bin/fsharpc-heroku
-cp -p /app/vendor/mono/bin/fsharpi /app/vendor/mono/bin/fsharpi-heroku
-
 echo "-----> Setting envvars"
 export PATH="/app/vendor/mono/bin:$PATH"
 export LD_LIBRARY_PATH="/app/vendor/mono/lib"

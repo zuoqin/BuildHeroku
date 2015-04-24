@@ -43,6 +43,9 @@ echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd ${BUILD_DIR}
 
+cp -p vendor/mono/bin/fsharpc vendor/mono/bin/fsharpc-heroku
+cp -p vendor/mono/bin/fsharpi vendor/mono/bin/fsharpi-heroku
+
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
   mono vendor/mono/bin/paket.exe install

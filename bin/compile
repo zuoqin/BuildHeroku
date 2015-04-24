@@ -8,7 +8,7 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 # fail fast
 set -e
 
-MONO3_VM_BINARY="https://s3.amazonaws.com/mono3-buildpack/mono-fsharp-nuget3.0.tar.bz2"
+MONO3_VM_BINARY="https://cdn.rawgit.com/SuaveIO/mono-builder/releases/download/0.0.1/mono-3.12.1.tar.gz"
 NUGET_BINARY="https://nuget.org/nuget.exe"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/0.35.0/paket.exe"
 

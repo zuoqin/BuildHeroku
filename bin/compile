@@ -30,25 +30,23 @@ cp -pr "${CACHE_DIR}/$STACK/vendor/mono" "${BUILD_DIR}/vendor/"
 
 rm -fr /app/vendor/mono
 
+# Mono expects to be running out of /app
 echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
 ln -s "${BUILD_DIR}/vendor/mono" /app
 
 # inspect app folder
-echo "ls /app/mono"
-ls /app/mono
-
-echo "ls /app/mono/bin"
-ls /app/mono/bin
-
-echo "ls /app/mono/lib"
-ls /app/mono/lib
-
-echo "ls /app/mono/lib/mono/4.5"
-ls /app/mono/lib/mono/4.5
+#echo "ls /app/mono"
+#ls /app/mono
+#echo "ls /app/mono/bin"
+#ls /app/mono/bin
+#echo "ls /app/mono/lib"
+#ls /app/mono/lib
+#echo "ls /app/mono/lib/mono/4.5"
+#ls /app/mono/lib/mono/4.5
 
 echo "-----> Setting envvars"
 export PATH="/app/mono/bin:$PATH"
-export LD_LIBRARY_PATH="/app/mono/lib"
+export LD_LIBRARY_PATH="/app/mono/lib:$LD_LIBRARY_PATH"
 echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd ${BUILD_DIR}

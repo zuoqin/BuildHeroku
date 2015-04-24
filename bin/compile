@@ -34,15 +34,8 @@ rm -fr /app/vendor/mono
 echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
 ln -s "${BUILD_DIR}/vendor/mono" /app
 
-# inspect app folder
-#echo "ls /app/mono"
-#ls /app/mono
-#echo "ls /app/mono/bin"
-#ls /app/mono/bin
-#echo "ls /app/mono/lib"
-#ls /app/mono/lib
-#echo "ls /app/mono/lib/mono/4.5"
-#ls /app/mono/lib/mono/4.5
+cp -p /app/mono/bin/fsharpc /app/mono/bin/fsharpc-heroku
+cp -p /app/mono/bin/fsharpi /app/mono/bin/fsharpi-heroku
 
 echo "-----> Setting envvars"
 export PATH="/app/mono/bin:$PATH"
@@ -50,9 +43,6 @@ export LD_LIBRARY_PATH="/app/mono/lib:$LD_LIBRARY_PATH"
 echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd ${BUILD_DIR}
-
-#cp -p vendor/mono/bin/fsharpc vendor/mono/bin/fsharpc-heroku
-#cp -p vendor/mono/bin/fsharpi vendor/mono/bin/fsharpi-heroku
 
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"

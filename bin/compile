@@ -55,7 +55,7 @@ fi
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
-  mono vendor/mono/lib/mono/4.5/fsc.exe -r:vendor/mono/lib/mono/4.5/FSharp.Core.dll -r:vendor/mono/lib/mono/4.0/mscorlib.dll app.fsx
+  mono vendor/mono/lib/mono/4.5/fsc.exe -r:vendor/mono/lib/mono/4.5/FSharp.Core.dll -r:vendor/mono/lib/mono/4.0/mscorlib.dll --noframework app.fsx
 elif [ -f *.sln ]; then
    echo "-----> Compiling application" 
    mono $XBUILD 

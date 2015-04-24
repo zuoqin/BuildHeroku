@@ -45,7 +45,7 @@ cd ${BUILD_DIR}
 
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
-  mono mono/bin/paket.exe install
+  mono vendor/mono/bin/paket.exe install
 fi
 
 if [ -f packages.config -o -f */packages.config ]; then 
@@ -55,7 +55,7 @@ fi
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
-  mono mono/lib/mono/4.5/fsc.exe app.fsx
+  mono vendor/mono/lib/mono/4.5/fsc.exe app.fsx
 elif [ -f *.sln ]; then
    echo "-----> Compiling application" 
    mono $XBUILD 

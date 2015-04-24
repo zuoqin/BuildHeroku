@@ -33,6 +33,9 @@ rm -fr /app/vendor/mono
 echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
 ln -s "${BUILD_DIR}/vendor/mono" /app
 
+# inspect app folder
+ls /app
+
 echo "-----> Setting envvars"
 export PATH="/app/mono/bin:$PATH"
 export LD_LIBRARY_PATH="/app/mono/lib"

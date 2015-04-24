@@ -43,6 +43,9 @@ ls /app/mono/bin
 echo "ls /app/mono/lib"
 ls /app/mono/lib
 
+echo "ls /app/mono/lib/mono/4.5"
+ls /app/mono/lib/mono/4.5
+
 echo "-----> Setting envvars"
 export PATH="/app/mono/bin:$PATH"
 export LD_LIBRARY_PATH="/app/mono/lib"

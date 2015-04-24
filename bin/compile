@@ -12,40 +12,40 @@ MONO3_VM_BINARY="https://github.com/SuaveIO/mono-builder/releases/download/0.0.1
 NUGET_BINARY="https://nuget.org/nuget.exe"
 PAKET_BINARY="https://github.com/fsprojects/Paket/releases/download/1.1.0/paket.exe"
 
-MOZROOT="${BUILD_DIR}/vendor/mono3/lib/mono/4.5/mozroots.exe"
-XBUILD="${BUILD_DIR}/vendor/mono3/lib/mono/4.5/xbuild.exe"
+MOZROOT="${BUILD_DIR}/vendor/mono/lib/mono/4.5/mozroots.exe"
+XBUILD="${BUILD_DIR}/vendor/mono/lib/mono/4.5/xbuild.exe"
 
 echo "-----> Downloading mono to ${CACHE_DIR}/$STACK/vendor"
-if [ ! -d ${CACHE_DIR}/$STACK/vendor/mono3 ]; then
+if [ ! -d ${CACHE_DIR}/$STACK/vendor/mono ]; then
     mkdir -p ${CACHE_DIR}/$STACK/vendor
-    curl -L $MONO3_VM_BINARY -s | tar zxvf - -C ${CACHE_DIR}/$STACK/vendor
-    curl $NUGET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono3/bin/nuget.exe" 
-    curl $PAKET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono3/bin/paket.exe" 
+    curl -L $MONO3_VM_BINARY -s | tar zxf - -C ${CACHE_DIR}/$STACK/vendor
+    curl $NUGET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono/bin/nuget.exe" 
+    curl $PAKET_BINARY -L -o "${CACHE_DIR}/$STACK/vendor/mono/bin/paket.exe" 
 fi
 
 mkdir -p ${BUILD_DIR}/vendor
 
-echo "-----> Copying ${CACHE_DIR}/$STACK/vendor/mono3 to ${BUILD_DIR}/vendor"
-cp -pr "${CACHE_DIR}/$STACK/vendor/mono3" "${BUILD_DIR}/vendor/"
+echo "-----> Copying ${CACHE_DIR}/$STACK/vendor/mono to ${BUILD_DIR}/vendor"
+cp -pr "${CACHE_DIR}/$STACK/vendor/mono" "${BUILD_DIR}/vendor/"
 
 rm -fr /app/vendor/mono3
 
-echo "-----> Linking ${BUILD_DIR}/vendor/mono3 --> /app"
-ln -s "${BUILD_DIR}/vendor/mono3" /app/vendor
+echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
+ln -s "${BUILD_DIR}/vendor/mono" /app/vendor
 
-cp -p /app/vendor/mono3/bin/fsharpc /app/vendor/mono3/bin/fsharpc-heroku
-cp -p /app/vendor/mono3/bin/fsharpi /app/vendor/mono3/bin/fsharpi-heroku
+cp -p /app/vendor/mono/bin/fsharpc /app/vendor/mono/bin/fsharpc-heroku
+cp -p /app/vendor/mono/bin/fsharpi /app/vendor/mono/bin/fsharpi-heroku
 
 echo "-----> Setting envvars"
-export PATH="/app/vendor/mono3/bin:$PATH"
-export LD_LIBRARY_PATH="/app/vendor/mono3/lib"
+export PATH="/app/vendor/mono/bin:$PATH"
+export LD_LIBRARY_PATH="/app/vendor/mono/lib"
 echo "-----> Importing trusted root certificates"
 mono $MOZROOT --sync --import
 cd ${BUILD_DIR}
 
 if [ -f paket.dependencies ]; then
   echo "-----> paket.dependencies found, installing packages with paket"
-  mono vendor/mono3/bin/paket.exe install
+  mono vendor/mono/bin/paket.exe install
 fi
 
 if [ -f packages.config -o -f */packages.config ]; then 

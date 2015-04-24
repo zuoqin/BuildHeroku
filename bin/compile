@@ -34,7 +34,14 @@ echo "-----> Linking ${BUILD_DIR}/vendor/mono --> /app"
 ln -s "${BUILD_DIR}/vendor/mono" /app
 
 # inspect app folder
+echo "ls /app/mono"
 ls /app/mono
+
+echo "ls /app/mono/bin"
+ls /app/mono/bin
+
+echo "ls /app/mono/lib"
+ls /app/mono/lib
 
 echo "-----> Setting envvars"
 export PATH="/app/mono/bin:$PATH"

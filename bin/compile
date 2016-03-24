@@ -53,10 +53,7 @@ elif [ -f paket.dependencies ]; then
   mono /app/mono/bin/paket.exe install
 fi
 
-if [ -f packages.config -o -f */packages.config ]; then
-   echo "-----> packages.config found, installing dependencies with nuget"
-   find  -name packages.config | xargs mono $NUGET install -o packages
-fi
+
 
 if [ -f app.fsx ]; then
   echo "-----> Compiling app.fsx"
